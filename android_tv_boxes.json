@@ -1,0 +1,67 @@
+[
+  {
+    "id": "box_001",
+    "name": "NVIDIA Shield TV Pro",
+    "price": "AED 849.00",
+    "image": "https://m.media-amazon.com/images/I/61dYAL8L79L._AC_SL1500_.jpg",
+    "metadata": {
+      "OS": "Android 11 (Upgradable)",
+      "RAM": "3GB",
+      "Storage": "16GB",
+      "4K_Support": true,
+      "Processor": "Tegra X1+"
+    }
+  },
+  {
+    "id": "box_002",
+    "name": "Xiaomi Mi Box S (2nd Gen)",
+    "price": "AED 185.00",
+    "image": "https://m.media-amazon.com/images/I/51f8W8zH9BL._AC_SL1500_.jpg",
+    "metadata": {
+      "OS": "Google TV (Android 11)",
+      "RAM": "2GB",
+      "Storage": "8GB",
+      "4K_Support": true,
+      "Processor": "Quad-core Cortex-A55"
+    }
+  },
+  {
+    "id": "box_003",
+    "name": "Strong LEAP-S3 4K",
+    "price": "AED 215.00",
+    "image": "https://m.media-amazon.com/images/I/61NlU6mP0uL._AC_SL1500_.jpg",
+    "metadata": {
+      "OS": "Android 11",
+      "RAM": "2GB",
+      "Storage": "16GB",
+      "4K_Support": true,
+      "Processor": "Amlogic S905Y4"
+    }
+  },
+  {
+    "id": "box_004",
+    "name": "H96 Max V58",
+    "price": "AED 450.00",
+    "image": "https://m.media-amazon.com/images/I/71YyP9f9m9L._AC_SL1500_.jpg",
+    "metadata": {
+      "OS": "Android 12",
+      "RAM": "8GB",
+      "Storage": "64GB",
+      "4K_Support": true,
+      "Processor": "RK3588"
+    }
+  },
+  {
+    "id": "box_005",
+    "name": "MECOOL KM2 Plus",
+    "price": "AED 299.00",
+    "image": "https://m.media-amazon.com/images/I/61u9O27P2eL._AC_SL1200_.jpg",
+    "metadata": {
+      "OS": "Android TV 11",
+      "RAM": "2GB",
+      "Storage": "16GB",
+      "4K_Support": true,
+      "Processor": "Amlogic S905X4-B"
+    }
+  }
+]

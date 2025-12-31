@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechVision - Premium Android TV Boxes</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Core Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/splitting@1.0.6/dist/splitting.css">
+    
+    <!-- Custom Styles -->
+    <style>
+        :root {
+            --neon-cyan: #00d4ff;
+            --electric-blue: #0080ff;
+            --purple-glow: #8b5cf6;
+            --deep-black: #0a0a0a;
+            --charcoal: #1a1a1a;
+            --midnight: #2a2a2a;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--deep-black);
+            color: white;
+            overflow-x: hidden;
+        }
+        
+        .font-orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        /* Glassmorphism Effects */
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .glass-nav {
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Neon Glow Effects */
+        .neon-glow {
+            text-shadow: 0 0 5px currentColor,
+                         0 0 10px currentColor,
+                         0 0 15px currentColor,
+                         0 0 20px var(--neon-cyan);
+        }
+        
+        .neon-border {
+            box-shadow: 0 0 5px var(--neon-cyan),
+                        0 0 10px var(--neon-cyan),
+                        0 0 15px var(--neon-cyan),
+                        inset 0 0 5px var(--neon-cyan);
+        }
+        
+        /* Hero Background */
+        .hero-bg {
+            background: linear-gradient(135deg, 
+                rgba(10, 10, 10, 0.9) 0%, 
+                rgba(26, 26, 26, 0.8) 50%, 
+                rgba(42, 42, 42, 0.7) 100%);
+            position: relative;
+        }
+        
+        .hero-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('resources/hero-main.jpg') center/cover;
+            opacity: 0.3;
+            z-index: -1;
+        }
+        
+        /* 3D Scene Container */
+        .scene-container {
+            width: 100%;
+            height: 500px;
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+        
+        /* Floating Animation */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        /* Pulse Animation */
+        @keyframes neon-pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .pulse-neon {
+            animation: neon-pulse 2s ease-in-out infinite;
+        }
+        
+        /* Product Card Hover Effects */
+        .product-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .product-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.2);
+        }
+        
+        /* WhatsApp Button */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+            background: #25d366;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+            transition: all 0.3s ease;
+        }
+        
+        .whatsapp-float:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 25px rgba(37, 211, 102, 0.6);
+        }
+        
+        /* Scroll Animations */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+        
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Grid Layout */
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--charcoal);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--neon-cyan);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--electric-blue);
+        }
+        
+        /* Mobile Optimizations */
+        @media (max-width: 768px) {
+            .scene-container {
+                height: 300px;
+            }
+            
+            .whatsapp-float {
+                bottom: 20px;
+                right: 20px;
+                width: 50px;
+                height: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="glass-nav fixed top-0 left-0 right-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <h1 class="text-2xl font-orbitron font-bold neon-glow text-cyan-400">TechVision</h1>
+                </div>
+                
+                <!-- Navigation Links -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="index.html" class="text-white hover:text-cyan-400 transition-colors duration-300 font-medium">Home</a>
+                    <a href="products.html" class="text-gray-300 hover:text-cyan-400 transition-colors duration-300 font-medium">Products</a>
+                    <a href="about.html" class="text-gray-300 hover:text-cyan-400 transition-colors duration-300 font-medium">About</a>
+                    <a href="contact.html" class="text-gray-300 hover:text-cyan-400 transition-colors duration-300 font-medium">Contact</a>
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-btn" class="text-white hover:text-cyan-400 transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="md:hidden hidden glass">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="index.html" class="block px-3 py-2 text-white font-medium">Home</a>
+                <a href="products.html" class="block px-3 py-2 text-gray-300 hover:text-white">Products</a>
+                <a href="about.html" class="block px-3 py-2 text-gray-300 hover:text-white">About</a>
+                <a href="contact.html" class="block px-3 py-2 text-gray-300 hover:text-white">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-bg min-h-screen flex items-center justify-center pt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <!-- Hero Content -->
+                <div class="fade-in-up">
+                    <h1 class="text-5xl lg:text-6xl font-orbitron font-bold mb-6">
+                        <span class="neon-glow text-white">Premium</span><br>
+                        <span class="text-cyan-400">Android TV</span><br>
+                        <span class="text-purple-400">Experience</span>
+                    </h1>
+                    
+                    <p class="text-xl text-gray-300 mb-8 leading-relaxed">
+                        Discover the ultimate streaming experience with our curated collection of premium Android TV boxes. From 4K gaming to seamless entertainment, transform your viewing experience with cutting-edge technology.
+                    </p>
+                    
+                    <div class="flex flex-col sm:flex-row gap-4 mb-12">
+                        <button onclick="scrollToProducts()" class="glass px-8 py-4 rounded-lg font-semibold text-lg hover:neon-border transition-all duration-300 pulse-neon">
+                            Explore Products
+                        </button>
+                        <a href="contact.html" class="glass px-8 py-4 rounded-lg font-semibold text-lg hover:neon-border transition-all duration-300 text-center">
+                            Get Quote
+                        </a>
+                    </div>
+                    
+                    <!-- Key Features -->
+                    <div class="grid grid-cols-3 gap-6">
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-cyan-400 mb-2">4K</div>
+                            <div class="text-sm text-gray-400">Ultra HD</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-purple-400 mb-2">5G</div>
+                            <div class="text-sm text-gray-400">Ready</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-green-400 mb-2">AI</div>
+                            <div class="text-sm text-gray-400">Powered</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 3D Showcase -->
+                <div class="fade-in-up">
+                    <div class="scene-container glass rounded-2xl">
+                        <div id="three-container" class="w-full h-full"></div>
+                        <div class="absolute bottom-4 left-4 right-4">
+                            <div class="glass rounded-lg p-4">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="font-semibold text-cyan-400">NVIDIA Shield TV Pro</span>
+                                    <span class="text-green-400 font-bold">AED 849</span>
+                                </div>
+                                <div class="text-sm text-gray-300">
+                                    <span class="bg-cyan-400/20 text-cyan-400 px-2 py-1 rounded text-xs mr-2">Android 11</span>
+                                    <span class="bg-purple-400/20 text-purple-400 px-2 py-1 rounded text-xs mr-2">3GB RAM</span>
+                                    <span class="bg-green-400/20 text-green-400 px-2 py-1 rounded text-xs">4K Support</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 3D Controls -->
+                    <div class="flex justify-center mt-4 space-x-4">
+                        <button id="rotate-btn" class="glass px-4 py-2 rounded-lg text-sm hover:neon-border transition-all">
+                            Auto Rotate
+                        </button>
+                        <button id="reset-btn" class="glass px-4 py-2 rounded-lg text-sm hover:neon-border transition-all">
+                            Reset View
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Products -->
+    <section id="featured-products" class="py-20 bg-gradient-to-b from-black to-gray-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-orbitron font-bold mb-4">
+                    <span class="neon-glow text-white">Featured</span>
+                    <span class="text-cyan-400">Products</span>
+                </h2>
+                <p class="text-xl text-gray-300 max-w-3xl mx-auto">
+                    Handpicked premium Android TV boxes that deliver exceptional performance and value
+                </p>
+            </div>
+            
+            <!-- Product Grid -->
+            <div id="featured-grid" class="tech-grid fade-in-up">
+                <!-- Products will be loaded dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Specifications Showcase -->
+    <section class="py-20 bg-gray-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div class="fade-in-up">
+                    <h2 class="text-4xl font-orbitron font-bold mb-6">
+                        <span class="text-white">Technical</span>
+                        <span class="text-cyan-400">Excellence</span>
+                    </h2>
+                    
+                    <div class="space-y-6">
+                        <div class="glass rounded-lg p-6">
+                            <div class="flex items-center mb-3">
+                                <div class="w-3 h-3 bg-cyan-400 rounded-full mr-3 pulse-neon"></div>
+                                <h3 class="text-xl font-semibold">4K Ultra HD Streaming</h3>
+                            </div>
+                            <p class="text-gray-300">Crystal clear 4K resolution with HDR support for the ultimate viewing experience.</p>
+                        </div>
+                        
+                        <div class="glass rounded-lg p-6">
+                            <div class="flex items-center mb-3">
+                                <div class="w-3 h-3 bg-purple-400 rounded-full mr-3 pulse-neon"></div>
+                                <h3 class="text-xl font-semibold">Powerful Processors</h3>
+                            </div>
+                            <p class="text-gray-300">Latest ARM Cortex processors with dedicated GPU for smooth performance.</p>
+                        </div>
+                        
+                        <div class="glass rounded-lg p-6">
+                            <div class="flex items-center mb-3">
+                                <div class="w-3 h-3 bg-green-400 rounded-full mr-3 pulse-neon"></div>
+                                <h3 class="text-xl font-semibold">Android 12 Ready</h3>
+                            </div>
+                            <p class="text-gray-300">Latest Android OS with Google Play Store and unlimited app possibilities.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="fade-in-up">
+                    <div class="glass rounded-2xl p-8">
+                        <h3 class="text-2xl font-semibold mb-6 text-center">Performance Comparison</h3>
+                        <div id="performance-chart" style="width: 100%; height: 400px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="py-20 bg-gradient-to-r from-cyan-900/20 to-purple-900/20">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center fade-in-up">
+            <h2 class="text-4xl font-orbitron font-bold mb-6">
+                <span class="neon-glow text-white">Ready to Transform</span>
+                <span class="text-cyan-400">Your Entertainment?</span>
+            </h2>
+            
+            <p class="text-xl text-gray-300 mb-8">
+                Join thousands of satisfied customers who have upgraded their viewing experience with our premium Android TV boxes.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="products.html" class="glass px-8 py-4 rounded-lg font-semibold text-lg hover:neon-border transition-all duration-300 pulse-neon">
+                    Browse All Products
+                </a>
+                <button onclick="openWhatsApp()" class="glass px-8 py-4 rounded-lg font-semibold text-lg hover:neon-border transition-all duration-300">
+                    Chat on WhatsApp
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <h3 class="text-2xl font-orbitron font-bold neon-glow text-cyan-400 mb-4">TechVision</h3>
+                <p class="text-gray-400 mb-6">Premium Android TV Box Solutions</p>
+                <div class="border-t border-gray-800 pt-6">
+                    <p class="text-gray-500 text-sm">
+                        © 2025 TechVision. All rights reserved. | Premium Android TV Box Solutions
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating WhatsApp Button -->
+    <div class="whatsapp-float" onclick="openWhatsApp()">
+        <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488"/>
+        </svg>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="main.js"></script>
+</body>
+</html>
